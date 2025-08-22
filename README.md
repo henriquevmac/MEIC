@@ -1,3 +1,3 @@
 # MEIC
 
-[Cadeiras](cadeiras.md)
+[Cadeiras](helpers/cadeiras.md)
