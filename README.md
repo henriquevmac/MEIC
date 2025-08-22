@@ -1,1 +1,3 @@
 # MEIC
+
+[Cadeiras](cadeiras.md)
