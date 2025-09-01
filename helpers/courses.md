@@ -1,4 +1,4 @@
-# Cadeiras
+# Courses
 
 # First Year
 ## First Semester (30 credits)
