@@ -8,11 +8,15 @@
 - [x] [Introduction to Robotics](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332809)
     - [files](../courses/IRobo/)
 - [x] [Communication Skills in Computer Science and Engineering I](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332830)
+    - [files](../courses/CCEIC_I/)
 - [x] [Interaction Design Studio](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332814)
+    - [files](../courses/DIIC/)
 
 ### P2 (12 credits)
 - [x] [Network and Computer Security](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/564478961778803)
+    - [files](../courses/SIRS/)
 - [x] [Deep Learning (Dei)](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/564478961778799)
+    - [files](../courses/AP/)
 
 ## Second Semester (36 credits)
 - [x] [Extracurricular Activities II](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/845953938490304)
