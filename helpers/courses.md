@@ -6,7 +6,7 @@
 
 ### P1 (15 credits)
 - [x] [Introduction to Robotics](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332809)
-    [files](../courses/IRobo/)
+    - [files](../courses/IRobo/)
 - [x] [Communication Skills in Computer Science and Engineering I](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332830)
 - [x] [Interaction Design Studio](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332814)
 
