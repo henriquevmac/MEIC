@@ -9,8 +9,8 @@
     - [files](../courses/IRobo/)
 - [x] [Communication Skills in Computer Science and Engineering I](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332830)
     - [files](../courses/CCEIC_I/)
-- [x] [Interaction Design Studio](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332814)
-    - [files](../courses/DIIC/)
+- [x] [Design and Implementation of Distributed Applications](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332821)
+    - [files](../courses/PADI/)
 
 ### P2 (12 credits)
 - [x] [Network and Computer Security](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/564478961778803)
