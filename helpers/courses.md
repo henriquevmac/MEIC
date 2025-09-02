@@ -36,3 +36,4 @@
 ### P1
 - [ ] [Natural Language](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332794)
 - [ ] [Management and Administration of It Infrastructures and Services](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332822)
+- [ ] [Large Scale Systems Engineering](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332827)
