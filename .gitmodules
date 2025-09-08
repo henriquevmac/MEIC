@@ -1,0 +1,3 @@
+[submodule "courses/DAD/projetoDAD"]
+	path = courses/DAD/projetoDAD
+	url = git@github.com:henriquevmac/projetoDAD.git
