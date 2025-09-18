@@ -1,3 +1,6 @@
 [submodule "courses/DAD/projetoDAD"]
 	path = courses/DAD/projetoDAD
 	url = git@github.com:henriquevmac/projetoDAD.git
+[submodule "courses/IRobo/projetoIRobo"]
+	path = courses/IRobo/projetoIRobo
+	url = git@github.com:henriquevmac/projetoIRobo.git
