@@ -7,8 +7,8 @@
 ### P1 (15 credits)
 - [x] [Introduction to Robotics](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332809)
     - [files](../courses/IRobo/)
-- [x] [Communication Skills in Computer Science and Engineering I](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332830)
-    - [files](../courses/CCEIC_I/)
+- [x] [Forensics Cyber-Security](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/845953938490320)
+    - [files](../courses/CSF/)
 - [x] [Design and Implementation of Distributed Applications](https://fenix.tecnico.ulisboa.pt/cursos/meic-a/disciplina-curricular/1971853845332821)
     - [files](../courses/DAD/)
 
