@@ -4,3 +4,12 @@
 [submodule "courses/IRobo/projetoIRobo"]
 	path = courses/IRobo/projetoIRobo
 	url = git@github.com:henriquevmac/projetoIRobo.git
+[submodule "courses/SIRS/labs/ex2"]
+	path = courses/SIRS/labs/ex2
+	url = git@github.com:tecnico-sec/Java-Crypto-Functions.git
+[submodule "courses/SIRS/labs/ex3"]
+	path = courses/SIRS/labs/ex3
+	url = git@github.com:tecnico-sec/Java-Crypto-Details.git
+[submodule "courses/SIRS/labs/ex4"]
+	path = courses/SIRS/labs/ex4
+	url = git@github.com:tecnico-sec/Secure-Documents.git
