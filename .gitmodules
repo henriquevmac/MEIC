@@ -13,3 +13,6 @@
 [submodule "courses/SIRS/labs/ex4"]
 	path = courses/SIRS/labs/ex4
 	url = git@github.com:tecnico-sec/Secure-Documents.git
+[submodule "courses/SIRS/projetoSIRS"]
+	path = courses/SIRS/projetoSIRS
+	url = git@github.com:tecnico-sec/A13-DeathNode.git
