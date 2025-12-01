@@ -16,3 +16,6 @@
 [submodule "courses/SIRS/projetoSIRS"]
 	path = courses/SIRS/projetoSIRS
 	url = git@github.com:tecnico-sec/A13-DeathNode.git
+[submodule "courses/AP/projetoDL"]
+	path = courses/AP/projetoDL
+	url = git@github.com:jaimevidex/DL.git
