@@ -19,3 +19,6 @@
 [submodule "courses/AP/projetoDL"]
 	path = courses/AP/projetoDL
 	url = git@github.com:jaimevidex/DL.git
+[submodule "courses/SIRS/labs/ex9"]
+	path = courses/SIRS/labs/ex9
+	url = git@github.com:tecnico-sec/Secure-Sockets-in-action.git
