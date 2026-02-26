@@ -1,0 +1,3 @@
+[submodule "courses/CPD/cpdProject"]
+	path = courses/CPD/cpdProject
+	url = git@github.com:tiagorb1/Document-Classification.git
