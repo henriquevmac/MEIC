@@ -1,0 +1,251 @@
+# --- Main execution --- 
+# Create the complex transition matrix
+T_complex = create_complex_transition_matrix()
+
+GRID_COST      = 10   
+SOLAR_REVENUE  = -5    
+FAIL_PENALTY   = 500  
+FAILURE_STATE = NUM_TOTAL_STATES - 1
+GAMMA = 0.99
+
+def build_cost_matrix(grid_cost=10, solar_revenue=-5, fail_penalty=500):
+    C_sa = np.zeros((NUM_TOTAL_STATES, NUM_ACTIONS))
+    C_sa[FAILURE_STATE, :] = fail_penalty
+    for s in range(NUM_REGULAR_STATES):
+        C_sa[s, AC] = grid_cost    
+        C_sa[s, AS] = 0             
+        C_sa[s, AE] = solar_revenue  
+    return C_sa
+
+
+C_sa = build_cost_matrix()
+
+# test cost matrix values for some states and all actions
+print("Cost matrix spot-checks  C(s, [AC, AS, AE])")
+for s in [0, 5, 32, 49, 75]:
+    print(f"  C({s:>2}, :) = {C_sa[s]}")
+
+def value_iteration(T, C_sa, gamma=GAMMA, tol=1e-6, max_iter=10_000):
+    """
+    Standard Value Iteration.
+
+    Returns
+    -------
+    V       : (NUM_TOTAL_STATES,)  optimal value function
+    policy  : (NUM_TOTAL_STATES,)  greedy policy
+    history : dict with keys
+                'bellman_errors'        – ||V_{k+1} - V_k||_inf per iteration
+                'policy_changes'        – # states where policy changed per iter
+                'n_iter'                – total iterations until convergence
+    """
+    n_states  = T.shape[1]
+    n_actions = T.shape[0]
+
+    V       = np.zeros(n_states)
+    policy  = np.zeros(n_states, dtype=int)
+
+    bellman_errors  = []
+    policy_changes  = []
+
+    for k in range(max_iter):
+        # Q(s,a) = C(s,a) + γ · Σ_{s'} T(a,s,s') · V(s')
+        # Shape: (n_states, n_actions)
+        Q = C_sa + gamma * np.einsum('aij,j->ia', T, V)
+
+        V_new      = Q.min(axis=1)
+        new_policy = Q.argmin(axis=1)
+
+        bellman_err   = np.max(np.abs(V_new - V))
+        policy_change = np.sum(new_policy != policy)
+
+        bellman_errors.append(bellman_err)
+        policy_changes.append(policy_change)
+
+        V      = V_new
+        policy = new_policy
+
+        if bellman_err < tol:
+            print(f"[VI] Converged in {k+1} iterations  (Bellman error = {bellman_err:.2e})")
+            break
+    else:
+        print(f"[VI] Did NOT converge within {max_iter} iterations")
+
+    history = {
+        'bellman_errors': bellman_errors,
+        'policy_changes': policy_changes,
+        'n_iter':         k + 1,
+    }
+    return V, policy, history
+
+def policy_evaluation(T, C_sa, policy, gamma=GAMMA, tol=1e-9):
+    """
+    Exact policy evaluation by solving the linear system:
+        (I - γ P_π) V = C_π
+    This is exact (no iterative inner loop) and therefore cheap per PI step.
+    """
+    n_states = T.shape[1]
+
+    # Gather per-state cost and transition row for the current policy
+    C_pi = C_sa[np.arange(n_states), policy]                  # (n_states,)
+    T_pi = T[policy, np.arange(n_states), :]                  # (n_states, n_states)
+
+    # Solve  (I - γ T_π) V = C_π
+    A = np.eye(n_states) - gamma * T_pi
+    V = np.linalg.solve(A, C_pi)
+    return V
+
+
+def policy_iteration(T, C_sa, gamma=GAMMA, max_iter=500):
+    """
+    Policy Iteration with exact policy evaluation.
+
+    Returns
+    -------
+    V, policy, history   (same structure as VI)
+    """
+    n_states  = T.shape[1]
+    n_actions = T.shape[0]
+
+    # Initialise with a uniform policy (always AC)
+    policy = np.zeros(n_states, dtype=int)
+
+    bellman_errors = []
+    policy_changes = []
+
+    for k in range(max_iter):
+        # --- Evaluation step (exact) ---
+        V = policy_evaluation(T, C_sa, policy, gamma)
+
+        # --- Improvement step ---
+        Q          = C_sa + gamma * np.einsum('aij,j->ia', T, V)
+        new_policy = Q.argmin(axis=1)
+
+        # Track diagnostics
+        V_new          = Q.min(axis=1)
+        bellman_err    = np.max(np.abs(V_new - V))
+        n_changed      = np.sum(new_policy != policy)
+
+        bellman_errors.append(bellman_err)
+        policy_changes.append(n_changed)
+
+        policy = new_policy
+
+        if n_changed == 0:
+            print(f"[PI] Converged in {k+1} iterations  (policy stable, Bellman error = {bellman_err:.2e})")
+            break
+    else:
+        print(f"[PI] Did NOT converge within {max_iter} iterations")
+
+    history = {
+        'bellman_errors': bellman_errors,
+        'policy_changes': policy_changes,
+        'n_iter':         k + 1,
+    }
+    return V, policy, history
+
+V_vi, pi_vi, hist_vi = value_iteration(T_complex, C_sa)
+V_pi, pi_pi, hist_pi = policy_iteration(T_complex, C_sa)
+
+# --- Are the policies the same? ---
+policy_match = np.sum(pi_vi != pi_pi)
+print(f"\nStates where VI and PI policies differ: {policy_match}")
+print(f"Max |V_VI - V_PI| = {np.max(np.abs(V_vi - V_pi)):.4e}")
+
+# --- Spot-check values ---
+ACTION_NAMES = {AC: 'AC', AS: 'AS', AE: 'AE'}
+print("\nValue / policy spot-checks")
+print(f"{'State':>6}  {'Factors':>12}  {'V_VI':>10}  {'V_PI':>10}  {'π_VI':>5}  {'π_PI':>5}")
+for s in [0, 5, 32, 49, 75]:
+    f = state_to_factors(s)
+    print(f"  {s:>4}  {str(f):>12}  {V_vi[s]:>10.2f}  {V_pi[s]:>10.2f}"
+          f"  {ACTION_NAMES[pi_vi[s]]:>5}  {ACTION_NAMES[pi_pi[s]]:>5}")
+    
+    
+fig, axes = plt.subplots(1, 2, figsize=(13, 4))
+
+# --- Bellman error ---
+ax = axes[0]
+ax.semilogy(hist_vi['bellman_errors'], label='VI', color='steelblue')
+ax.semilogy(hist_pi['bellman_errors'], label='PI', color='tomato', linestyle='--')
+ax.set_xlabel('Iteration')
+ax.set_ylabel('Bellman Error  ||V_{k+1} − V_k||∞  (log scale)')
+ax.set_title('Convergence: Bellman Error')
+ax.legend()
+ax.grid(True, which='both', alpha=0.4)
+
+# --- Policy changes ---
+ax = axes[1]
+ax.plot(hist_vi['policy_changes'], label='VI', color='steelblue')
+ax.plot(hist_pi['policy_changes'], label='PI', color='tomato', linestyle='--')
+ax.set_xlabel('Iteration')
+ax.set_ylabel('# states with changed policy')
+ax.set_title('Convergence: Policy Changes per Iteration')
+ax.legend()
+ax.grid(True, alpha=0.4)
+
+plt.tight_layout()
+plt.savefig('vi_vs_pi_convergence.png', dpi=150)
+plt.show()
+print("Plot saved → vi_vs_pi_convergence.png")
+
+def print_transition_examples(action_idx, action_name, max_initial_states_to_show=5, max_transitions_per_initial_state=3):
+    print(f"\n--- Examples for Action {action_idx} ({action_name}) ---")
+    
+    # Define some interesting example states (b, w, c) to showcase different scenarios
+    example_states = [
+        (0, 0, 0),   # Low battery, no sun, no consumption
+        (4, 2, 0),   # Full battery, sunny, no consumption
+        (1, 4, 0),   # Low battery, no sun, high consumption (potential for 0 battery)
+        (3, 1, 2),   # Medium battery, cloudy, medium consumption
+        (0, 4, 2)    # Empty battery, sunny, high consumption (challenging state)
+    ]
+    
+    states_shown_count = 0
+    
+    for b_cur, w_cur, c_cur in example_states:
+        if states_shown_count >= max_initial_states_to_show:
+            break
+            
+        s_current = factors_to_state(b_cur, w_cur, c_cur)
+        print(f"  From Initial State {s_current} ({b_cur},{w_cur},{c_cur}):")
+        transitions_for_state = []
+        
+        for s_next in range(NUM_TOTAL_STATES):
+            prob = T_complex[action_idx, s_current, s_next]
+            
+            if prob > 0:
+                transitions_for_state.append((prob, s_next))
+
+        # Sort by probability descending
+        transitions_for_state.sort(key=lambda x: x[0], reverse=True)
+        transitions_printed_for_this_state = 0
+        
+        for prob, s_next in transitions_for_state:
+            if transitions_printed_for_this_state >= max_transitions_per_initial_state:
+                break
+            
+            if s_next == NUM_TOTAL_STATES - 1: # Failure state
+                print(f"    to Failure State {s_next} with P = {prob:.4f}")
+            else:
+                b_next, w_next, c_next = state_to_factors(s_next)
+                print(f"    to State {s_next} ({b_next},{w_next},{c_next}) with P = {prob:.4f}")
+                
+            transitions_printed_for_this_state += 1
+        
+        if transitions_printed_for_this_state == 0:
+            print("    No transitions with P > 0 found (this should not happen for valid MDPs unless states are terminal).")
+            
+        states_shown_count += 1
+
+# Print examples for each action
+print_transition_examples(AC, "Charge", max_initial_states_to_show=5, max_transitions_per_initial_state=3)
+print_transition_examples(AS, "Solar", max_initial_states_to_show=5, max_transitions_per_initial_state=3)
+print_transition_examples(AE, "Export", max_initial_states_to_show=5, max_transitions_per_initial_state=3)
+
+# Demonstrate state conversion functions with examples (unchanged from before)
+print("\n--- Demonstrating state conversion functions (unchanged) ---")
+print(f"Factors (0, 0, 0) -> State: {factors_to_state(0, 0, 0)}")
+print(f"Factors (4, 4, 2) -> State: {factors_to_state(4, 4, 2)}") # Max regular state
+print(f"State 0 -> Factors: {state_to_factors(0)}")
+print(f"State 74 -> Factors: {state_to_factors(74)}") # Max regular state
+print(f"State 75 (Failure) -> Factors: {state_to_factors(75)}") # Failure state
