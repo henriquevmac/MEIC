@@ -1,3 +1,9 @@
 [submodule "courses/CPD/cpdProject"]
 	path = courses/CPD/cpdProject
 	url = git@github.com:tiagorb1/Document-Classification.git
+[submodule "courses/AAMAS/catanAgentAAMAS"]
+	path = courses/AAMAS/catanAgentAAMAS
+	url = git@github.com:vasco-s-pereira/CatanAgent.git
+[submodule "courses/CNV/cnvProject"]
+	path = courses/CNV/cnvProject
+	url = git@gitlab.rnl.tecnico.ulisboa.pt:cnv/cnv26-groups/cnv26-g34.git
