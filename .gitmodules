@@ -7,3 +7,6 @@
 [submodule "courses/CNV/cnvProject"]
 	path = courses/CNV/cnvProject
 	url = git@gitlab.rnl.tecnico.ulisboa.pt:cnv/cnv26-groups/cnv26-g34.git
+[submodule "courses/IAJ/projetos"]
+	path = courses/IAJ/projetos
+	url = git@github.com:pombcoraft/iaj-project.git
